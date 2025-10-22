@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surana Lost & Found</title>
+    <meta name="description" content="Surana College Lost & Found portal to report, find, and claim items on campus.">
+    <meta property="og:title" content="Surana Lost & Found">
+    <meta property="og:description" content="Report lost items, list found items, and manage claims for Surana College.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="./">
+    <meta property="og:image" content="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><rect width='100%' height='100%' fill='%230066cc'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='64' fill='%23ffffff'>Surana Lost & Found</text></svg>">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="./">
+    <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230066cc'/><text x='50' y='60' font-size='54' text-anchor='middle' fill='white'>🔍</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="TrueFocus.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ReactBits-inspired ambient background */
+.header, .hero-section { position: relative; overflow: hidden; }
+.header .header-content, .hero-section .hero-content { position: relative; z-index: 1; }
+.fx-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.fx-bg canvas { width: 100%; height: 100%; display: block; }
+@media (prefers-reduced-motion: reduce) {
+  .fx-bg { display: none; }
+}
+body { margin: 0; }
+.logo-images { display: flex; align-items: center; gap: 8px; overflow: hidden; }
+.logo-image { max-height: 64px; height: auto; width: auto; object-fit: contain; display: block; }
+@media (max-width: 600px) {
+  .logo-image { max-height: 48px; }
+}
+
+/* Title badge next to H1 */
+.main-title { display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; justify-content: flex-start; }
+.club-badge { display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px; border: 1px solid rgba(0,0,0,0.12); background: rgba(255,255,255,0.85); border-radius: 999px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); backdrop-filter: saturate(180%) blur(6px); white-space: nowrap; }
+.club-badge img { height: 30px; width: auto; object-fit: contain; }
+.club-text { font-weight: 600; color: #111; }
+@media (max-width: 600px) {
+  .club-badge img { height: 24px; }
+  .club-text { display: none; }
+}
+
+/* Hero presented-by strip (desktop only) */
+.presented-strip { display: none; align-items: center; gap: 10px; margin: 6px 0 14px; justify-content: center; }
+.presented-strip .label { opacity: 0.9; font-size: 0.95rem; }
+.presented-strip .presented-logo { height: 24px; width: auto; object-fit: contain; }
+@media (min-width: 768px) { .presented-strip { display: inline-flex; } }
+
+/* Compact header and nav buttons */
+.header { background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.06); padding: 0 !important; }
+.header .header-content { position: relative; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; padding: 8px 16px; min-height: 72px; width: 100%; max-width: 100%; margin: 0; }
+.logo-section { display: flex; align-items: center; min-width: 0; margin-right: 0; }
+.nav-section { position: relative; display: flex; align-items: center; gap: 8px; }
+/* New header layout */
+.left-logo img { height: 70px; width: auto; object-fit: contain; display: block; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15)); }
+.center-title { display: flex; align-items: center; justify-content: center; text-align: center; }
+.center-title h1 { margin: 0; }
+.right-tools { display: flex; align-items: center; gap: 14px; justify-self: end; }
+
+@media (max-width: 768px) {
+  .left-logo img { height: 56px; }
+  .right-tools { gap: 10px; }
+}
+.header .nav-links { display: flex; flex-wrap: nowrap; gap: 8px; align-items: center; justify-content: flex-end; white-space: nowrap; }
+.header .nav-links .nav-link { padding: 6px 10px; font-size: 0.95rem; line-height: 1.1; border-radius: 8px; }
+.header .nav-links .nav-link:hover { background: rgba(0,0,0,0.05); }
+.header .btn.btn-login { padding: 6px 10px !important; font-size: 0.95rem; line-height: 1.1; border-radius: 8px; }
+.header .nav-links .btn-login { margin-left: 0 !important; }
+.header .mobile-menu-toggle { padding: 6px; font-size: 1rem; border: 1px solid rgba(0,0,0,0.12); border-radius: 8px; background: #fff; display: none; align-items: center; justify-content: center; }
+@media (min-width: 768px) { 
+  .main-title { flex-wrap: nowrap; }
+  .main-title h1 { white-space: nowrap; }
+  .logo-section { margin-right: clamp(24px, 5vw, 80px); }
+  .main-title { margin-left: 8px; }
+}
+
+/* Title sizing */
+.main-title h1 { margin: 0; line-height: 1.1; font-size: clamp(24px, 3vw, 34px); text-align: left; }
+
+/* Mobile nav behavior */
+@media (max-width: 768px) {
+  .header .header-content { padding: 6px 10px; gap: 8px; }
+  .header .nav-links { position: absolute; top: 100%; right: 0; left: 0; background: #ffffff; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px; margin-top: 8px; padding: 8px; display: none; flex-direction: column; align-items: stretch; gap: 4px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); z-index: 20; }
+  .header .nav-links.show { display: flex; }
+  .header .nav-links .nav-link,
+  .header .btn.btn-login { padding: 10px 12px !important; font-size: 0.95rem; width: 100%; text-align: left; }
+  .header .mobile-menu-toggle { display: inline-flex; }
+}
+</style>
+</head>
+<body>
+
+
+    <!-- Header -->
+    <header class="header">
+        <div id="fx-header-bg" class="fx-bg"></div>
+        <div class="header-content">
+            <div class="left-logo" aria-label="Surana College">
+                <img src="R.png" alt="Surana College logo" class="logo-image">
+            </div>
+
+            <div class="main-title center-title">
+                <h1>Surana Lost & Found</h1>
+            </div>
+
+            <div class="right-tools">
+                                <div class="nav-section">
+                    <nav class="nav-links">
+                        <a href="#hero-section" class="nav-link active" onclick="navigateToSection('home', event)">🏠 Home</a>
+                        <a href="#items-section" class="nav-link" onclick="navigateToSection('found-items', event)">🔍 Found Items</a>
+                        <a href="#dashboard" class="nav-link" onclick="navigateToSection('dashboard', event)">📊 Dashboard</a>
+                        <button class="btn btn-login nav-link" style="margin-left: 10px;" onclick="openEmailAuthModal()">🔑 Login / Sign Up</button>
+                        <a href="#" class="club-logo" aria-label="Esoteric IT Club">
+                            <img src="esotericlogopng.png" alt="Esoteric IT Club logo" style="height:90px; border-radius:14px; box-shadow:0 4px 20px rgba(46,40,92,0.14); background:#fff; padding:6px 13px; transition:box-shadow 0.2s, transform 0.19s;" onmouseover="this.style.boxShadow='0 12px 30px rgba(0,0,0,0.17)'; this.style.transform='translateY(-1px) scale(1.045)'" onmouseout="this.style.boxShadow='0 4px 20px rgba(46,40,92,0.14)'; this.style.transform='none';">
+                        </a>
+                                            </nav>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero-section" class="hero-section">
+        <div id="fx-hero-bg" class="fx-bg"></div>
+        <div class="hero-content">
+            <h2>Lost Something on Campus?</h2>
+            <p>Connect with fellow students to reunite with your belongings</p>
+                        
+            <div class="action-buttons">
+                                 <button class="btn btn-lost" onclick="openLostItemModal()">
+                     ⚠️
+                     Report Lost Item
+                 </button>
+                                 <button class="btn btn-found" onclick="openFoundItemModal()">
+                     💚
+                     Report Found Item
+                 </button>
+            </div>
+            <div id="trueFocus" class="focus-container" data-sentence="Find Report Reunite" data-border-color="#28a745" data-glow-color="rgba(40,167,69,0.55)" data-blur-amount="5" data-duration="0.5" data-pause="1"></div>
+
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        ⚠️
+                    </div>
+                    <h3>Photo Evidence</h3>
+                    <p>Upload clear photos to help identify items</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        📍
+                    </div>
+                    <h3>Location Tracking</h3>
+                    <p>Specify exact campus locations for better matching</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        🔒
+                    </div>
+                    <h3>Secure Claims</h3>
+                    <p>Verification process ensures rightful ownership</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Email Login/Sign Up Modal -->
+    <div id="emailAuthModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="authModalTitle">Login</h2>
+                <span class="close" onclick="closeEmailAuthModal()">&times;</span>
+            </div>
+            <form id="emailLoginForm" class="email-auth-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email *</label>
+                    <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                    <input type="email" id="loginEmail" name="loginEmail" required placeholder="Enter your email" autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password *</label>
+                    <span class="input-icon"><i class="fas fa-lock"></i></span>
+                    <input type="password" id="loginPassword" name="loginPassword" required placeholder="Enter your password">
+                    <span class="toggle-password" onclick="togglePassword('loginPassword', this)"><i class="fas fa-eye"></i></span>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" onclick="handleEmailLogin()">Login</button>
+                </div>
+                <div class="switch-auth">
+                    <span>Don't have an account?</span>
+                    <a href="#" onclick="showSignUpForm(event)">Sign Up</a>
+                </div>
+                <div id="loginMessage" class="auth-message"></div>
+            </form>
+            <form id="emailSignUpForm" class="email-auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="signUpEmail">Email *</label>
+                    <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                    <input type="email" id="signUpEmail" name="signUpEmail" required placeholder="Enter your email" autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="signUpPassword">Password *</label>
+                    <span class="input-icon"><i class="fas fa-lock"></i></span>
+                    <input type="password" id="signUpPassword" name="signUpPassword" required placeholder="Create a password">
+                    <span class="toggle-password" onclick="togglePassword('signUpPassword', this)"><i class="fas fa-eye"></i></span>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-success" onclick="handleEmailSignUp()">Sign Up</button>
+                </div>
+                <div class="switch-auth">
+                    <span>Already have an account?</span>
+                    <a href="#" onclick="showLoginForm(event)">Login</a>
+                </div>
+                <div id="signUpMessage" class="auth-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <section class="search-section">
+        <div class="search-container">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search items, descriptions, locations..." id="searchInput">
+            </div>
+            
+            <div class="filter-controls">
+                <select class="filter-dropdown" id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="books">Books</option>
+                    <option value="personal">Personal Items</option>
+                    <option value="other">Other</option>
+                </select>
+                
+                <select class="filter-dropdown" id="locationFilter">
+                    <option value="">All Locations</option>
+                    <option value="library">Library</option>
+                    <option value="canteen">Food Canteen</option>
+                    <option value="basement">Basement</option>
+                    <option value="parking">Parking</option>
+                    <option value="surroundings">Near the College Surroundings</option>
+                    <option value="gate">College Gate</option>
+                    <option value="1st-floor">1st Floor</option>
+                    <option value="2nd-floor">2nd Floor</option>
+                    <option value="3rd-floor">3rd Floor</option>
+                    <option value="computer-lab">Computer Lab</option>
+                </select>
+                
+                <select class="filter-dropdown" id="dateFilter">
+                    <option value="">Any Date</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
+                
+                <div class="sort-control">
+                    <label>Sort by:</label>
+                    <select class="filter-dropdown" id="sortFilter">
+                        <option value="recent">Most Recent</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="name">Name A-Z</option>
+                        <option value="location">Location</option>
+                    </select>
+                </div>
+                <label class="checkbox-label" style="display:inline-flex;align-items:center;gap:8px;">
+                    <input type="checkbox" id="highValueOnly">
+                    <span>High Value only</span>
+                </label>
+                <button id="saveSearchBtn" class="btn btn-secondary">💾 Save Search</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lost Items Section -->
+    <section class="lost-items-section">
+        <div class="items-container">
+            <h2>Lost Items</h2>
+            
+            <div class="lost-items-content" id="lostItemsContent">
+                <!-- Lost items will be populated by JavaScript -->
+                <div class="no-items">
+                    <div class="no-items-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>No lost items reported</h3>
+                    <p>No one has reported lost items yet. Be the first to report a lost item!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Found Items Section -->
+    <section id="items-section" class="items-section">
+        <div class="items-container">
+            <h2>Found Items</h2>
+            
+            <div class="items-content" id="itemsContent">
+                <!-- Found items will be populated by JavaScript -->
+                <div class="no-items">
+                    <div class="no-items-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>No items found</h3>
+                    <p>Try adjusting your search filters or check back later for new items.</p>
+                </div>
+            </div>
+        </div>
+            </section>
+        
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="dashboard-section" style="display: none;">
+            <div class="container">
+                <div class="dashboard-header">
+                    <h2>📊 My Dashboard</h2>
+                    <p>Manage your lost and found items, profile, and settings</p>
+                </div>
+                
+                <div class="dashboard-content">
+                    <!-- Dashboard Sidebar -->
+                    <div class="dashboard-sidebar">
+                        <div class="sidebar-menu">
+                            <button class="sidebar-item active" onclick="showDashboardTab('overview')">
+                                📈 System Overview
+                            </button>
+                            <button class="sidebar-item" onclick="showDashboardTab('my-items')">
+                                📦 All Items
+                            </button>
+                            <button class="sidebar-item" onclick="showDashboardTab('watchlist')">
+                                ⭐ Watchlist
+                            </button>
+                            <button class="sidebar-item" onclick="showDashboardTab('claims')">
+                                🔍 All Claims
+                            </button>
+                            <button class="sidebar-item" onclick="showDashboardTab('profile')">
+                                ℹ️ System Info
+                            </button>
+                            <button class="sidebar-item" onclick="showDashboardTab('settings')">
+                                📊 System Stats
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Dashboard Main Content -->
+                    <div class="dashboard-main">
+                        <!-- Overview Tab -->
+                        <div id="overview-tab" class="dashboard-tab active">
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-icon">📦</div>
+                                    <div class="stat-content">
+                                        <h3 id="totalLostItems">0</h3>
+                                        <p>Total Lost Items</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">🔍</div>
+                                    <div class="stat-content">
+                                        <h3 id="totalFoundItems">0</h3>
+                                        <p>Total Found Items</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">⏳</div>
+                                    <div class="stat-content">
+                                        <h3 id="pendingClaims">0</h3>
+                                        <p>Pending Claims</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">✅</div>
+                                    <div class="stat-content">
+                                        <h3 id="resolvedItems">0</h3>
+                                        <p>Resolved Items</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="recent-activity">
+                                <h3>Recent System Activity</h3>
+                                <div id="activityFeed" class="activity-feed">
+                                    <div class="no-activity">
+                                        <p>No recent activity</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- All Items Tab -->
+                        <div id="my-items-tab" class="dashboard-tab">
+                            <div class="tab-header">
+                                <h3>All Items in System</h3>
+                                <div class="tab-actions">
+                                    <button class="btn btn-primary" onclick="openLostItemModal()">Report Lost Item</button>
+                                    <button class="btn btn-success" onclick="openFoundItemModal()">Report Found Item</button>
+                                </div>
+                            </div>
+                            
+                            <div class="items-tabs">
+                                <button class="item-tab active" onclick="showItemType('lost')">Lost Items</button>
+                                <button class="item-tab" onclick="showItemType('found')">Found Items</button>
+                            </div>
+                            
+                            <div id="my-lost-items" class="my-items-content active">
+                                <div id="myLostItemsContent"></div>
+                            </div>
+                            
+                            <div id="my-found-items" class="my-items-content">
+                                <div id="myFoundItemsContent"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Watchlist Tab -->
+                        <div id="watchlist-tab" class="dashboard-tab">
+                            <h3>My Watchlist</h3>
+                            <div id="watchlistContent"></div>
+                        </div>
+                        
+                        <!-- Claims Tab -->
+                        <div id="claims-tab" class="dashboard-tab">
+                            <h3>All Claim Requests</h3>
+                            <div id="claimsContent"></div>
+                        </div>
+                        
+                        <!-- Profile Tab -->
+                        <div id="profile-tab" class="dashboard-tab">
+                            <h3>System Information</h3>
+                            <div class="system-info">
+                                <div class="info-card">
+                                    <h4>🏫 About Surana College</h4>
+                                    <p>Surana College is an autonomous institution affiliated to Bangalore University, re-accredited by NAAC with A+ grade.</p>
+                                </div>
+                                <div class="info-card">
+                                    <h4>🔍 Lost & Found System</h4>
+                                    <p>This system helps students and staff report lost items and connect with those who found them.</p>
+                                </div>
+                                <div class="info-card">
+                                    <h4>📞 Contact Support</h4>
+                                    <p>For technical support or questions about the system, contact the IT department.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Settings Tab -->
+                        <div id="settings-tab" class="dashboard-tab">
+                            <h3>System Statistics</h3>
+                            <div class="system-stats">
+                                <div class="stat-card">
+                                    <div class="stat-icon">📊</div>
+                                    <div class="stat-content">
+                                        <h3 id="totalSystemItems">0</h3>
+                                        <p>Total Items in System</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">✅</div>
+                                    <div class="stat-content">
+                                        <h3 id="totalResolvedItems">0</h3>
+                                        <p>Successfully Resolved</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">📈</div>
+                                    <div class="stat-content">
+                                        <h3 id="successRate">0%</h3>
+                                        <p>Success Rate</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <div class="footer-title">
+                        <h3>Surana Lost & Found</h3>
+                        <p>Helping students reconnect with their belongings through community collaboration.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="#hero-section" onclick="navigateToSection('home', event)">Home</a></li>
+                                         <li><a href="#items-section" onclick="navigateToSection('found-items', event)">Found Items</a></li>
+                    <li><a href="#dashboard" onclick="navigateToSection('dashboard', event)">Dashboard</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Support</h4>
+                <div class="contact-info">
+                    <p class="address">3rd Floor 307, 308</p>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2024 Surana Lost & Found. All rights reserved. | Made with ❤️ for our campus community</p>
+        </div>
+    </footer>
+
+    <!-- Lost Item Modal -->
+    <div id="lostItemModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="lostModalTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="lostModalTitle">Report Lost Item</h2>
+                <span class="close" onclick="closeLostItemModal()">&times;</span>
+            </div>
+            <form id="lostItemForm" class="lost-item-form">
+                <div class="form-group">
+                    <label for="itemName">Item Name *</label>
+                    <input type="text" id="itemName" name="itemName" required placeholder="e.g., iPhone 13, Student ID Card">
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemDescription">Description *</label>
+                    <textarea id="itemDescription" name="itemDescription" required placeholder="Describe your lost item in detail (color, brand, model, unique features, etc.)"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="itemCategory">Category *</label>
+                        <select id="itemCategory" name="itemCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="accessories">Accessories</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="books">Books</option>
+                            <option value="personal">Personal Items</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lostLocation">Last Seen Location *</label>
+                        <select id="lostLocation" name="lostLocation" required>
+                            <option value="">Select Location</option>
+                            <option value="library">Library</option>
+                            <option value="canteen">Food Canteen</option>
+                            <option value="basement">Basement</option>
+                            <option value="parking">Parking</option>
+                            <option value="surroundings">Near the College Surroundings</option>
+                            <option value="gate">College Gate</option>
+                            <option value="1st-floor">1st Floor</option>
+                            <option value="2nd-floor">2nd Floor</option>
+                            <option value="3rd-floor">3rd Floor</option>
+                            <option value="computer-lab">Computer Lab</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="lostDate">Date Lost *</label>
+                        <input type="date" id="lostDate" name="lostDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactNumber">Contact Number *</label>
+                        <input type="tel" id="contactNumber" name="contactNumber" required placeholder="Your phone number" inputmode="numeric" pattern="[0-9]{7,15}" autocomplete="tel">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><input type="checkbox" id="highValue" name="highValue"> Mark as High Value</label>
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemPhoto">Photo of Similar Item (Optional)</label>
+                    <div class="photo-upload">
+                        <input type="file" id="itemPhoto" name="itemPhoto" accept="image/*" onchange="previewPhoto(this)">
+                        <div class="upload-placeholder">
+                            <div class="upload-icon">📷</div>
+                            <p>Click to upload a photo</p>
+                            <p class="upload-hint">Upload a photo of a similar item or the actual item if available</p>
+                        </div>
+                        <div id="photoPreview" class="photo-preview" style="display: none;">
+                            <img id="previewImage" src="" alt="Preview">
+                            <button type="button" class="remove-photo" onclick="removePhoto()">✕</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="additionalInfo">Additional Information</label>
+                    <textarea id="additionalInfo" name="additionalInfo" placeholder="Any other details that might help in finding your item (time, people you were with, etc.)"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeLostItemModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Found Item Modal -->
+    <div id="foundItemModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="foundModalTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="foundModalTitle">Report Found Item</h2>
+                <span class="close" onclick="closeFoundItemModal()">&times;</span>
+            </div>
+            <form id="foundItemForm" class="found-item-form">
+                <div class="form-group">
+                    <label for="foundItemName">Item Name *</label>
+                    <input type="text" id="foundItemName" name="foundItemName" required placeholder="e.g., iPhone 13, Student ID Card">
+                </div>
+                
+                <div class="form-group">
+                    <label for="foundItemDescription">Description *</label>
+                    <textarea id="foundItemDescription" name="foundItemDescription" required placeholder="Describe the found item in detail (color, brand, model, condition, etc.)"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="foundItemCategory">Category *</label>
+                        <select id="foundItemCategory" name="foundItemCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="accessories">Accessories</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="books">Books</option>
+                            <option value="personal">Personal Items</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="foundLocation">Found Location *</label>
+                        <select id="foundLocation" name="foundLocation" required>
+                            <option value="">Select Location</option>
+                            <option value="library">Library</option>
+                            <option value="canteen">Food Canteen</option>
+                            <option value="basement">Basement</option>
+                            <option value="parking">Parking</option>
+                            <option value="surroundings">Near the College Surroundings</option>
+                            <option value="gate">College Gate</option>
+                            <option value="1st-floor">1st Floor</option>
+                            <option value="2nd-floor">2nd Floor</option>
+                            <option value="3rd-floor">3rd Floor</option>
+                            <option value="computer-lab">Computer Lab</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="foundDate">Date Found *</label>
+                        <input type="date" id="foundDate" name="foundDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="foundTime">Time Found (Approximate)</label>
+                        <input type="time" id="foundTime" name="foundTime" placeholder="e.g., 14:30">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="foundItemPhoto">Photo of Found Item *</label>
+                    <div class="photo-upload">
+                        <input type="file" id="foundItemPhoto" name="foundItemPhoto" accept="image/*" onchange="previewFoundPhoto(this)" required>
+                        <div class="upload-placeholder">
+                            <div class="upload-icon">📷</div>
+                            <p>Click to upload a photo</p>
+                            <p class="upload-hint">Please upload a clear photo of the found item</p>
+                        </div>
+                        <div id="foundPhotoPreview" class="photo-preview" style="display: none;">
+                            <img id="foundPreviewImage" src="" alt="Preview">
+                            <button type="button" class="remove-photo" onclick="removeFoundPhoto()">✕</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="finderName">Your Name *</label>
+                    <input type="text" id="finderName" name="finderName" required placeholder="Your full name">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="finderContact">Contact Number *</label>
+                        <input type="tel" id="finderContact" name="finderContact" required placeholder="Your phone number" inputmode="numeric" pattern="[0-9]{7,15}" autocomplete="tel">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="finderEmail">Email (Optional)</label>
+                        <input type="email" id="finderEmail" name="finderEmail" placeholder="Your email address" autocomplete="email">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemCondition">Item Condition</label>
+                    <select id="itemCondition" name="itemCondition">
+                        <option value="">Select Condition</option>
+                        <option value="excellent">Excellent - Like New</option>
+                        <option value="good">Good - Minor Wear</option>
+                        <option value="fair">Fair - Some Damage</option>
+                        <option value="poor">Poor - Significant Damage</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><input type="checkbox" id="foundHighValue" name="highValue"> Mark as High Value</label>
+                </div>
+                
+                <div class="form-group">
+                    <label for="additionalFoundInfo">Additional Information</label>
+                    <textarea id="additionalFoundInfo" name="additionalFoundInfo" placeholder="Any other details about where you found it, circumstances, or special notes"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeFoundItemModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+    <script src="effects.js" defer></script>
+    <script src="truefocus.js" defer></script>
+    <script src="script.js" defer></script>
+</body>
+</html>

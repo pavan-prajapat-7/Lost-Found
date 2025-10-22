@@ -36,11 +36,6 @@ A modern web application designed to help students at Surana College reconnect w
 - **Interactive Elements**: Hover effects, smooth transitions
 - **Accessibility**: Proper contrast ratios and semantic HTML
 
-### 📞 **Contact Information**
-- **Support Team**:
-  - Pavan R - 8971271932
-  - Manthan - 7892862993
-  - Yadhu - 8111835438
 - **Location**: 3rd Floor 307, 308
 - **Social Media**: Facebook, Twitter, Pinterest links
 
@@ -107,13 +102,6 @@ To customize the website:
 - Database integration
 - Admin dashboard
 - Email notifications
-
-## Support
-
-For technical support or questions about the website, please contact:
-- **Pavan R**: 8971271932
-- **Manthan**: 7892862993
-- **Yadhu**: 8111835438
 
 ---
 
